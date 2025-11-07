@@ -1419,6 +1419,44 @@ function updateNumericFromIndividuals() {
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
         }
+
+        function formatDateToLocale(dateString) {
+            if (!dateString) return '—';
+            const parsed = new Date(dateString);
+            if (Number.isNaN(parsed.getTime())) {
+                return '—';
+            }
+            return parsed.toLocaleString('pt-BR');
+        }
+
+        function updateTextContent(id, value, fallback = '—') {
+            const element = document.getElementById(id);
+            if (!element) return;
+            if (value === null || value === undefined || value === '') {
+                element.textContent = fallback;
+            } else {
+                element.textContent = value;
+            }
+        }
+
+        function updateWarningsList(warnings) {
+            const container = document.getElementById('dashboard-overview-alerts');
+            if (!container) return;
+
+            if (!warnings || warnings.length === 0) {
+                container.textContent = 'Nenhum alerta.';
+                container.classList.remove('has-warning');
+                return;
+            }
+
+            container.classList.add('has-warning');
+            container.innerHTML = '';
+            warnings.forEach((message) => {
+                const span = document.createElement('span');
+                span.textContent = message;
+                container.appendChild(span);
+            });
+        }
         
         
         function loadScript(src, id) {
@@ -1437,15 +1475,104 @@ function updateNumericFromIndividuals() {
         }
         
         let statsInterval; // Timer para o Dashboard e Monitor
+        let overviewInterval; // Timer para o overview do Dashboard
         let fileEditorInstance = null;
         let fileClipboard = { action: null, path: null };
         let currentFileViewMode = localStorage.getItem('fileViewMode') || 'details';
 
         // MÓDULO DO DASHBOARD e MONITOR
-        async function fetchSystemStats() { try { const response = await fetch('./api/system_stats.php?t=' + new Date().getTime()); if(response.status === 403) { window.location.href = 'login.php'; return; } const data = await response.json(); if (document.getElementById('load-percent')) document.getElementById('load-percent').textContent = data.load_percent + '%'; if (document.getElementById('load-avg')) document.getElementById('load-avg').textContent = data.load_avg; if (document.getElementById('cpu-cores')) document.getElementById('cpu-cores').textContent = data.cpu_cores; if (document.getElementById('ram-percent')) document.getElementById('ram-percent').textContent = data.ram_percent + '%'; if (document.getElementById('ram-used')) document.getElementById('ram-used').textContent = data.ram_used_mb; if (document.getElementById('ram-total')) document.getElementById('ram-total').textContent = data.ram_total_mb; if (document.getElementById('disk-percent')) document.getElementById('disk-percent').textContent = data.disk_root_percent + '%'; if (document.getElementById('disk-used')) document.getElementById('disk-used').textContent = data.disk_root_gb; if (document.getElementById('disk-total')) document.getElementById('disk-total').textContent = data.disk_root_total_gb; if (document.getElementById('overview-sites')) document.getElementById('overview-sites').textContent = data.overview.sites; if (document.getElementById('overview-ftp')) document.getElementById('overview-ftp').textContent = data.overview.ftp; if (document.getElementById('overview-db')) document.getElementById('overview-db').textContent = data.overview.db; } catch (error) { console.error('Erro ao buscar estatísticas do sistema:', error); if (statsInterval) clearInterval(statsInterval); } }
-        function initializeDashboard() { fetchSystemStats(); if (statsInterval) clearInterval(statsInterval); statsInterval = setInterval(fetchSystemStats, 5000); }
-        function initializeMonitorPage() { fetchSystemStats(); if (statsInterval) clearInterval(statsInterval); statsInterval = setInterval(fetchSystemStats, 5000); }
-        function clearStatsInterval() { if (statsInterval) clearInterval(statsInterval); }
+        async function fetchSystemStats() { try { const response = await fetch('./api/system_stats.php?t=' + new Date().getTime()); if(response.status === 403) { window.location.href = 'login.php'; return; } const data = await response.json(); if (document.getElementById('load-percent')) document.getElementById('load-percent').textContent = data.load_percent + '%'; if (document.getElementById('load-avg')) document.getElementById('load-avg').textContent = data.load_avg; if (document.getElementById('cpu-cores')) document.getElementById('cpu-cores').textContent = data.cpu_cores; if (document.getElementById('ram-percent')) document.getElementById('ram-percent').textContent = data.ram_percent + '%'; if (document.getElementById('ram-used')) document.getElementById('ram-used').textContent = data.ram_used_mb; if (document.getElementById('ram-total')) document.getElementById('ram-total').textContent = data.ram_total_mb; if (document.getElementById('disk-percent')) document.getElementById('disk-percent').textContent = data.disk_root_percent + '%'; if (document.getElementById('disk-used')) document.getElementById('disk-used').textContent = data.disk_root_gb; if (document.getElementById('disk-total')) document.getElementById('disk-total').textContent = data.disk_root_total_gb; } catch (error) { console.error('Erro ao buscar estatísticas do sistema:', error); if (statsInterval) clearInterval(statsInterval); } }
+        async function fetchDashboardOverview() {
+            try {
+                const response = await fetch('./api/dashboard_overview.php?t=' + new Date().getTime());
+                if(response.status === 403) { window.location.href = 'login.php'; return; }
+                const data = await response.json();
+                if (!data.success) {
+                    throw new Error(data.message || 'Falha ao obter overview do dashboard.');
+                }
+
+                const modules = data.modules || {};
+
+                const websites = modules.websites || {};
+                updateTextContent('websites-total', websites.total);
+                updateTextContent('websites-active', websites.active);
+                updateTextContent('websites-inactive', websites.inactive);
+
+                const backups = modules.backups || {};
+                updateTextContent('backups-tracked', backups.tracked_sites);
+                updateTextContent('backups-with-backup', backups.with_backup);
+                updateTextContent('backups-without-backup', backups.without_backup);
+                updateTextContent('backups-stale', backups.stale_backups);
+                if (backups.latest) {
+                    updateTextContent('backups-latest-site', backups.latest.site);
+                    updateTextContent('backups-latest-date', formatDateToLocale(backups.latest.date));
+                    updateTextContent('backups-latest-size', Number.isFinite(backups.latest.size_bytes) ? formatBytes(backups.latest.size_bytes) : '—');
+                } else {
+                    updateTextContent('backups-latest-site', '—');
+                    updateTextContent('backups-latest-date', '—');
+                    updateTextContent('backups-latest-size', '—');
+                }
+
+                const databases = modules.databases || {};
+                updateTextContent('databases-total', databases.total);
+                updateTextContent('databases-with-backup', databases.with_backup);
+                updateTextContent('databases-without-backup', databases.without_backup);
+                updateTextContent('databases-stale', databases.stale_backups);
+                if (databases.latest) {
+                    updateTextContent('databases-latest-name', databases.latest.name);
+                    updateTextContent('databases-latest-date', formatDateToLocale(databases.latest.date));
+                    updateTextContent('databases-latest-size', Number.isFinite(databases.latest.size_bytes) ? formatBytes(databases.latest.size_bytes) : '—');
+                } else {
+                    updateTextContent('databases-latest-name', '—');
+                    updateTextContent('databases-latest-date', '—');
+                    updateTextContent('databases-latest-size', '—');
+                }
+
+                const fullBackups = modules.full_backups || {};
+                updateTextContent('full-backup-status', fullBackups.has_archive ? 'Disponível' : 'Não encontrado');
+                updateTextContent('full-backup-filename', fullBackups.filename);
+                updateTextContent('full-backup-updated', fullBackups.last_modified ? formatDateToLocale(fullBackups.last_modified) : '—');
+                updateTextContent('full-backup-size', fullBackups.has_archive && Number.isFinite(fullBackups.size_bytes) ? formatBytes(fullBackups.size_bytes) : '—');
+
+                const cron = modules.cron || {};
+                updateTextContent('cron-total', cron.total);
+                updateTextContent('cron-active', cron.active);
+                updateTextContent('cron-inactive', cron.inactive);
+
+                const security = modules.security || {};
+                updateTextContent('security-total-rules', security.total_rules);
+                updateTextContent('security-allow', security.allow_rules);
+                updateTextContent('security-deny', security.deny_rules);
+
+                const logs = modules.logs || {};
+                updateTextContent('logs-total', logs.total_options);
+                updateTextContent('logs-task', logs.task_entries);
+                updateTextContent('logs-file', logs.file_entries);
+
+                const queue = modules.queue || {};
+                updateTextContent('queue-pending', queue.pending);
+                updateTextContent('queue-processing', queue.processing);
+                updateTextContent('queue-complete', queue.complete);
+                updateTextContent('queue-failed', queue.failed);
+                updateTextContent('queue-file-pending', queue.file_operations_pending);
+                updateTextContent('queue-oldest', queue.oldest_pending ? formatDateToLocale(queue.oldest_pending) : '—');
+
+                const settings = modules.settings || {};
+                updateTextContent('settings-version', settings.panel_version);
+                const generatedSource = settings.generated_at || data.generated_at;
+                updateTextContent('settings-generated', generatedSource ? formatDateToLocale(generatedSource) : '—');
+
+                updateTextContent('dashboard-overview-updated', data.generated_at ? formatDateToLocale(data.generated_at) : '—');
+                updateWarningsList(data.warnings || []);
+            } catch (error) {
+                console.error('Erro ao obter overview do dashboard:', error);
+                updateWarningsList(['Erro ao obter overview do dashboard.']);
+            }
+        }
+
+        function initializeDashboard() { fetchSystemStats(); fetchDashboardOverview(); if (statsInterval) clearInterval(statsInterval); statsInterval = setInterval(fetchSystemStats, 5000); if (overviewInterval) clearInterval(overviewInterval); overviewInterval = setInterval(fetchDashboardOverview, 60000); }
+        function initializeMonitorPage() { fetchSystemStats(); if (statsInterval) clearInterval(statsInterval); statsInterval = setInterval(fetchSystemStats, 5000); if (overviewInterval) clearInterval(overviewInterval); }
+        function clearStatsInterval() { if (statsInterval) clearInterval(statsInterval); if (overviewInterval) clearInterval(overviewInterval); }
 
         // MÓDULO WEBSITES
         async function loadSitesList() {
