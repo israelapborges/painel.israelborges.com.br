@@ -1,0 +1,27 @@
+/* Grelha para os 5 campos do cron (min, hora, dia, etc.) */
+.cron-schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 colunas iguais */
+    gap: 10px;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 15px;
+}
+
+.cron-schedule-grid .form-group {
+    margin-bottom: 0;
+}
+
+.cron-schedule-grid label {
+    font-size: 0.8em;
+    font-weight: 500;
+    text-align: center;
+}
+
+.cron-schedule-grid input {
+    text-align: center;
+    font-family: monospace;
+    font-size: 1.2em;
+    padding: 5px;
+}

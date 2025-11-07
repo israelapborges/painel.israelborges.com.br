@@ -1,0 +1,38 @@
+        /* --- ADICIONE ESTE BLOCO --- */
+        /* Ajustes para o CodeMirror se integrar ao tema do painel */
+        .CodeMirror {
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            height: auto; /* Faz o editor respeitar o 'rows' do textarea */
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        
+        /* Tema Padrão (Light Mode) */
+        .cm-s-default {
+            background: #fff !important; /* Fundo branco */
+            color: #1f2335 !important; /* Texto escuro */
+        }
+        .cm-s-default .CodeMirror-gutters { /* Calha dos números */
+            background: #f4f7f6 !important;
+            border-right-color: var(--border-color) !important;
+        }
+        .cm-s-default .CodeMirror-linenumber {
+             color: var(--text-muted) !important;
+        }
+
+        /* Tema Dracula (Dark Mode) */
+        .cm-s-dracula {
+            background: var(--bg-color) !important; /* Fundo do painel */
+            color: var(--text-color) !important;
+        }
+        .cm-s-dracula .CodeMirror-gutters { /* Calha dos números */
+            background: var(--card-bg) !important; /* Fundo do card */
+            border-right-color: var(--border-color) !important;
+        }
+        .cm-s-dracula .CodeMirror-linenumber {
+            color: var(--text-muted) !important;
+        }
+        .cm-s-dracula .CodeMirror-cursor {
+            border-left-color: var(--text-color) !important;
+        }

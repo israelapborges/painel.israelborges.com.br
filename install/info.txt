@@ -1,0 +1,156 @@
+Arquivos necessários adicionais estão nessa pasta!
+
+vhost do nginx:
+
+server {
+  listen 80;
+  listen [::]:80;
+  listen 443 quic;
+  listen 443 ssl;
+  listen [::]:443 quic;
+  listen [::]:443 ssl;
+  http2 on;
+  http3 off;
+  {{ssl_certificate_key}}
+  {{ssl_certificate}}
+  server_name painel.israelborges.com.br;
+  {{root}}
+
+  {{nginx_access_log}}
+  {{nginx_error_log}}
+
+  if ($scheme != "https") {
+    rewrite ^ https://$host$request_uri permanent;
+  }
+
+  location ~ /.well-known {
+    auth_basic off;
+    allow all;
+  }
+
+  {{settings}}
+
+# --- ADICIONE ESTE BLOCO NOVO ---
+  # Redireciona o tráfego WebSocket para o seu servidor PTY (Node.js)
+  location /websocket/ {
+      proxy_pass http://127.0.0.1:8081; # A porta do pty-server.js
+      proxy_http_version 1.1;
+      
+      # Cabeçalhos obrigatórios para WebSockets
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+      
+      # Cabeçalhos de proxy
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      
+      # Timeouts longos para a sessão PTY
+      proxy_read_timeout 86400s;
+      proxy_send_timeout 86400s;
+  }
+  # --- FIM DO NOVO BLOCO ---
+
+  location / {
+    {{varnish_proxy_pass}}
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_hide_header X-Varnish;
+    proxy_redirect off;
+    proxy_max_temp_file_size 0;
+    proxy_connect_timeout      720;
+    proxy_send_timeout         720;
+    proxy_read_timeout         720;
+    proxy_buffer_size          128k;
+    proxy_buffers              4 256k;
+    proxy_busy_buffers_size    256k;
+    proxy_temp_file_write_size 256k;
+  }
+
+  location ~* ^.+\.(css|js|jpg|jpeg|gif|png|ico|gz|svg|svgz|ttf|otf|woff|woff2|eot|mp4|ogg|ogv|webm|webp|zip|swf|map|mjs)$ {
+    add_header Access-Control-Allow-Origin "*";
+    add_header alt-svc 'h3=":443"; ma=86400';
+    expires max;
+    access_log off;
+  }
+
+  location ~ /\.(ht|svn|git) {
+    deny all;
+  }
+
+  if (-f $request_filename) {
+    break;
+  }
+}
+
+server {
+  listen 8080;
+  listen [::]:8080;
+  server_name painel.israelborges.com.br;
+  {{root}}
+
+  include /etc/nginx/global_settings;
+
+  try_files $uri $uri/ /index.php?$args;
+  index index.php index.html;
+
+  location ~ \.php$ {
+    include fastcgi_params;
+    fastcgi_intercept_errors on;
+    fastcgi_index index.php;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    try_files $uri =404;
+    fastcgi_read_timeout 3600;
+    fastcgi_send_timeout 3600;
+    fastcgi_param HTTPS "on";
+    fastcgi_param SERVER_PORT 443;
+    fastcgi_pass 127.0.0.1:{{php_fpm_port}};
+    fastcgi_param PHP_VALUE "{{php_settings}}";
+  }
+
+  if (-f $request_filename) {
+    break;
+  }
+}
+
+systemctl restart nginx
+
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt-get install nodejs
+mkdir -p /home/israelborges-painel/htdocs/painel.israelborges.com.br/pty-server
+chown -R israelborges-painel:israelborges-painel /home/israelborges-painel/htdocs/painel.israelborges.com.br/pty-server
+cd pty-server
+su - israelborges-painel
+npm init -y
+npm install node-pty ws
+
+nano /etc/systemd/system/mypanel-pty.service:
+[Unit]
+Description=MyPanel PTY WebSocket Server
+After=network.target
+
+[Service]
+Type=simple
+# Executa como o seu utilizador, não como root!
+User=israelborges-painel
+Group=israelborges-painel
+
+# Caminho para o node e para o seu script
+ExecStart=/usr/bin/node /home/israelborges-painel/htdocs/painel.israelborges.com.br/pty-server/server.js
+
+Restart=always
+RestartSec=3
+WorkingDirectory=/home/israelborges-painel/htdocs/painel.israelborges.com.br/pty-server
+
+[Install]
+WantedBy=multi-user.target
+
+systemctl enable mypanel-pty.service
+systemctl start mypanel-pty.service
+systemctl status mypanel-pty.service
+
+
+Fonte:
+https://gemini.google.com/u/2/gem/coding-partner/3a2195ba0136cd0d

@@ -1,0 +1,19 @@
+[Unit]
+Description=MyPanel PTY WebSocket Server
+After=network.target
+
+[Service]
+Type=simple
+# Executa como o seu utilizador, não como root!
+User=israelborges-painel
+Group=israelborges-painel
+
+# Caminho para o node e para o seu script
+ExecStart=/usr/bin/node /home/israelborges-painel/htdocs/painel.israelborges.com.br/pty-server/server.js
+
+Restart=always
+RestartSec=3
+WorkingDirectory=/home/israelborges-painel/htdocs/painel.israelborges.com.br/pty-server
+
+[Install]
+WantedBy=multi-user.target

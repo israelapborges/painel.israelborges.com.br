@@ -1,0 +1,841 @@
+:root {
+    --bg-color: #1a1b26;      
+    --card-bg: #24283b;      
+    --text-color: #c0caf5;   
+    --text-muted: #737c99;   
+    --accent-color: #7aa2f7; 
+    --shadow-color: rgba(0,0,0,0.2);
+    --border-color: #3b4261;
+    --sidebar-bg: #24283b;
+    --sidebar-width: 240px;
+}
+
+body.light-mode {
+    --bg-color: #f4f7f6;      
+    --card-bg: #ffffff;      
+    --text-color: #1f2335;   
+    --text-muted: #5f6368;   
+    --accent-color: #1a73e8; 
+    --shadow-color: rgba(0,0,0,0.05);
+    --border-color: #e0e0e0;
+    --sidebar-bg: #ffffff;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: background 0.3s, color 0.3s;
+    margin: 0;
+    padding: 0;
+}
+
+.layout-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    padding: 20px 0;
+    box-shadow: 2px 0 10px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100%;
+    z-index: 100;
+}
+
+.sidebar .logo {
+    text-align: center;
+    padding: 0 20px 20px 20px;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--accent-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar nav {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.sidebar nav a {
+    display: block;
+    padding: 12px 20px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+}
+
+.sidebar nav a:hover {
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+.sidebar nav a.active {
+    background: var(--accent-color);
+    color: #fff;
+}
+
+.sidebar .sidebar-footer {
+    padding: 10px 0;
+    border-top: 1px solid var(--border-color);
+    margin-top: 10px;
+}
+
+.sidebar .sidebar-footer a {
+    display: block;
+    padding: 12px 20px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+}
+
+.sidebar .sidebar-footer a:hover {
+    background: #f44336; /* Vermelho */
+    color: #fff;
+}
+
+.main-content-wrapper {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px 20px 10px;
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    transition: background 0.3s;
+    overflow: hidden; /* Para conter as tabelas */
+}
+
+.card h2, .card h3 {
+    margin-top: 0;
+    color: var(--text-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.stat-value {
+    font-size: 2.5em;
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+.stat-label {
+    font-size: 0.9em;
+    color: var(--text-muted);
+}
+
+.loading {
+    color: var(--text-muted);
+    font-size: 1em; 
+}
+
+p { color: var(--text-muted); }
+p strong { color: var(--text-color); font-weight: 600; }
+
+#theme-toggle {
+    font-size: 1.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+}
+#theme-toggle:hover { background: var(--bg-color); }
+
+/* Estilos do Modal (Globais) */
+.modal-backdrop {
+    display: none;
+    position: fixed !important;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+.modal-backdrop.show {
+    display: flex;
+}
+.modal-content {
+    background: var(--card-bg);
+    color: var(--text-color);
+    padding: 0; 
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 500px;
+    overflow: hidden; 
+}
+.modal-close-btn {
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 25px; 
+    margin-bottom: 20px;
+}
+.modal-header h2 {
+    margin: 0;
+    color: var(--text-color);
+    border-bottom: none; 
+    padding-bottom: 0;
+}
+
+.modal-tab-content,
+#restoreDatabaseForm {
+    padding: 0 25px 25px 25px;
+}
+
+
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    color: var(--text-color);
+    font-size: 1em;
+    box-sizing: border-box; 
+}
+.form-group input[type="file"] {
+    padding: 0; 
+}
+
+
+.form-group select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23737c99' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+}
+
+
+.btn-primary {
+    background-color: var(--accent-color);
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+/* --- ESTILOS DE MÓDULOS (Globais) --- */
+.header-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Permite que os botões quebrem a linha */
+    gap: 10px; /* Espaço entre os botões */
+}
+.header-controls h2 {
+    margin: 0;
+    color: var(--text-color);
+}
+
+/* --- Estilos de Tabela (Globais) --- */
+.table-container-responsive {
+    width: 100%;
+    overflow-x: auto; /* Adiciona scroll horizontal */
+}
+
+#sites-table,
+#databases-table,
+#backups-table,
+#full-backups-table,
+#files-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#sites-table th, #sites-table td,
+#databases-table th, #databases-table td,
+#backups-table th, #backups-table td,
+#full-backups-table th, #full-backups-table td,
+#files-table th, #files-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap; /* Impede que o texto quebre a linha */
+}
+
+#sites-table th,
+#databases-table th,
+#backups-table th,
+#full-backups-table th,
+#files-table th {
+    color: var(--text-muted);
+    font-size: 0.9em;
+    text-transform: uppercase;
+}
+
+#sites-table .loading,
+#databases-table .loading,
+#backups-table .loading,
+#full-backups-table .loading,
+#files-table .loading {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-muted);
+    white-space: normal;
+}
+/* --- Fim dos Estilos de Tabela --- */
+
+
+.status-active {
+    color: #4CAF50; /* Verde */
+    font-weight: bold;
+}
+.status-inactive {
+    color: #f44336; /* Vermelho */
+    font-weight: bold;
+}
+.action-btn {
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+    transition: background 0.2s, color 0.2s;
+    margin-top: 5px; /* Adiciona espaço no mobile */
+    margin-bottom: 5px; /* Adiciona espaço no mobile */
+}
+.action-btn:hover {
+    background: var(--border-color);
+    color: var(--text-color);
+}
+.action-link {
+    display: inline-block;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-right: 5px;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    font-size: 0.9em;
+}
+.action-link:hover {
+    background: var(--border-color);
+    color: var(--text-color);
+}
+.action-link.disabled {
+    color: var(--border-color);
+    background: var(--bg-color);
+    pointer-events: none;
+    opacity: 0.5;
+}
+.actions-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.action-placeholder {
+    color: var(--text-muted);
+    display: inline-block;
+    min-width: 32px; /* mantém alinhamento */
+    text-align: center;
+}
+
+
+/* --- Estilos do Footer do Sidebar (Logout) --- */
+.sidebar .sidebar-footer {
+    padding: 10px 0;
+    border-top: 1px solid var(--border-color);
+    margin-top: 10px;
+}
+
+.sidebar .sidebar-footer a {
+    display: block;
+    padding: 12px 20px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+}
+
+.sidebar .sidebar-footer a:hover {
+    background: #f44336; /* Vermelho */
+    color: #fff;
+}
+
+/* --- Estilos do Toggle Switch --- */
+.toggle-switch-container {
+    display: flex;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    overflow: hidden; 
+    width: 100%;
+    box-sizing: border-box;
+}
+.toggle-switch-container input[type="radio"] {
+    display: none; 
+}
+.toggle-switch-container label {
+    flex: 1; 
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 0; 
+    color: var(--text-muted);
+    background: var(--bg-color);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    font-weight: 500;
+}
+.toggle-switch-container input[type="radio"]#status_ativo:checked + label {
+    background: #4CAF50; /* Verde */
+    color: #fff;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+}
+.toggle-switch-container input[type="radio"]#status_inativo:checked + label {
+    background: #f44336; /* Vermelho */
+    color: #fff;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+}
+.toggle-switch-container label:first-of-type {
+    border-right: 1px solid var(--border-color);
+}
+
+/* --- Estilos do Modal Nginx (Loading) --- */
+#nginx-modal-loading {
+    text-align: center;
+    padding: 30px;
+    font-size: 1.1em;
+}
+#nginx-modal-loading .loading {
+    color: var(--text-muted);
+}
+
+/* --- Estilos do Módulo de Logs --- */
+.log-controls {
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.log-controls .form-group {
+    flex-grow: 1; 
+    margin-bottom: 0;
+}
+
+.log-viewer-container {
+    width: 100%;
+    max-height: 600px;
+    overflow: auto; 
+    background: var(--bg-color); 
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+}
+#log-content-area {
+    padding: 15px;
+    margin: 0;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 0.85em;
+    color: var(--text-color);
+    white-space: pre-wrap; 
+    word-wrap: break-word;
+}
+#log-content-area.loading {
+    color: var(--text-muted);
+    text-align: center;
+    padding: 40px;
+}
+
+/* --- Estilos das Abas (Tabs) do Modal --- */
+.modal-tabs {
+    display: flex;
+    background-color: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+}
+.modal-tab-btn {
+    flex: 1;
+    padding: 15px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s, border-bottom 0.2s;
+    border-bottom: 3px solid transparent;
+}
+.modal-tab-btn:hover {
+    color: var(--text-color);
+}
+.modal-tab-btn.active {
+    color: var(--accent-color);
+    border-bottom-color: var(--accent-color);
+}
+.modal-tab-content {
+    display: none; 
+}
+.modal-tab-content.active {
+    display: block; 
+}
+
+/* --- Estilos do Botão de Upload de Arquivo --- */
+.file-input-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px; 
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    box-sizing: border-box; 
+}
+.file-input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+.file-input + .btn-primary,
+.file-input-container .btn-primary {
+    flex-shrink: 0; 
+    margin: 0;
+    padding: 8px 12px; 
+    font-size: 0.9em;
+}
+#file-name-display,
+#restore-site-file-name {
+    color: var(--text-muted);
+    font-size: 0.9em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* --- Estilos da Barra de Rolagem (Scrollbar) --- */
+::-webkit-scrollbar {
+    width: 8px;  
+    height: 8px; 
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-color); 
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border-color); 
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted); 
+}
+
+
+/* --- NOVO: Estilos Responsivos (Mobile) --- */
+
+/* 1. Estilos do Botão Hambúrguer e Backdrop */
+#mobile-menu-toggle {
+    display: none; /* Escondido no Desktop */
+    font-size: 1.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-right: 15px; 
+}
+#mobile-menu-toggle:hover { 
+    background: var(--bg-color); 
+}
+
+.mobile-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998; 
+}
+.mobile-backdrop.show {
+    display: block;
+}
+
+
+/* 2. O @media Query (A Mágica) */
+/* Aplica estes estilos em telas de 768px ou menores */
+@media (max-width: 768px) {
+    
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-out;
+        z-index: 999; 
+        box-shadow: 4px 0 15px rgba(0,0,0,0.2); 
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main-content-wrapper {
+        margin-left: 0;
+        width: 100%;
+        padding: 15px; 
+    }
+    .header-controls > .btn-primary {
+        width: 100%;
+        margin-top: 10px;
+    }
+    .header-controls button.btn-primary {
+        width: 100%; 
+        margin-bottom: 5px;
+    }
+    .header {
+        padding: 0 0 20px 0; 
+    }
+
+    #mobile-menu-toggle {
+        display: block; 
+    }
+    
+    .modal-content {
+        width: 95%;
+    }
+    
+    .dashboard {
+        grid-template-columns: 1fr; 
+    }
+
+    /* --- CORREÇÃO: Botões do Cabeçalho (Full Backup) --- */
+    .header-controls {
+        flex-direction: column; /* Empilha os botões */
+        align-items: stretch; /* Faz os botões ocuparem 100% */
+    }
+    .header-controls h2 {
+        text-align: center; /* Centraliza o título */
+        margin-bottom: 15px;
+    }
+.header-controls {
+        flex-direction: column; /* Empilha os itens */
+        align-items: stretch; /* Estica os itens */
+    }
+    .header-controls h2 {
+        text-align: center; /* Centraliza o título */
+        margin-bottom: 15px;
+    }
+    
+    /* Regra para DIVs dentro do cabeçalho (ex: Full Backups) */
+    .header-controls div {
+        display: flex;
+        flex-direction: column; 
+        gap: 10px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    /* Regra para BOTÕES diretamente dentro do cabeçalho (ex: Arquivos) */
+    .header-controls > .btn-primary {
+        width: 100%;
+        margin-top: 10px;
+        margin-right: 0; /* Remove margens extras */
+        box-sizing: border-box; /* Garante que o padding não quebre o 100% */
+    }
+
+    /* Remove o scroll horizontal (quebra a experiência) */
+    .table-container-responsive {
+        overflow-x: hidden;
+    }
+    
+    /* --- CORREÇÃO: Tabelas Responsivas (Modo Card) --- */
+    
+    /* Esconde o cabeçalho da tabela */
+    #sites-table thead,
+    #databases-table thead,
+    #backups-table thead,
+    #full-backups-table thead,
+    #files-table thead,
+    #cron-table thead {
+        display: none;
+    }
+    
+    /* Remove a borda do 'tbody' (agora desnecessária) */
+    #sites-table tbody,
+    #databases-table tbody,
+    #backups-table tbody,
+    #full-backups-table tbody,
+    #files-table tbody {
+        border-top: none;
+    }
+
+    /* Transforma a linha (row) num card */
+    #sites-table tr,
+    #databases-table tr,
+    #backups-table tr,
+    #full-backups-table tr,
+    #files-table tr {
+        display: block;
+        border: 1px solid var(--border-color);
+        background: var(--card-bg);
+        border-radius: 8px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 4px var(--shadow-color);
+    }
+    
+    #sites-table tr:first-child,
+    #databases-table tr:first-child,
+    #backups-table tr:first-child,
+    #full-backups-table tr:first-child {
+         /* Remove a borda da linha de "Loading..." ou "Nenhum..." */
+         border: none;
+         background: none;
+         box-shadow: none;
+    }
+    
+    /* Transforma a célula (cell) num item de lista */
+    #sites-table td,
+    #databases-table td,
+    #backups-table td,
+    #full-backups-table td,
+    #files-table td {
+        display: block;
+        text-align: right; /* Alinha o valor à direita */
+        padding-left: 50%; /* Dá espaço para o label */
+        position: relative;
+        white-space: normal; /* Permite quebra de linha */
+        border: none;
+        border-bottom: 1px solid var(--bg-color); /* Separador sutil */
+    }
+    
+    #sites-table td:last-child,
+    #files-table td:last-child,
+    #databases-table td:last-child,
+    #backups-table td:last-child,
+    #full-backups-table td:last-child {
+        border-bottom: none; /* Remove a borda da última célula */
+    }
+
+    /* Adiciona o Label (ex: "Nome do Site:") antes do valor */
+    #sites-table td[data-label]::before,
+    #databases-table td[data-label]::before,
+    #backups-table td[data-label]::before,
+    #full-backups-table td[data-label]::before,
+    #files-table td[data-label]::before {
+        content: attr(data-label); /* Pega o texto do data-label */
+        position: absolute;
+        left: 15px;
+        width: calc(50% - 30px); /* Metade do espaço menos padding */
+        text-align: left;
+        font-weight: 500;
+        color: var(--text-color); 
+        white-space: nowrap;
+    }
+
+#files-table td {
+        padding-left: 15px; /* Remove o padding de 50% */
+        padding-right: 15px;
+        padding-top: 10px;  /* Adiciona padding normal */
+        padding-bottom: 10px;
+        text-align: left;   /* Alinha o conteúdo à esquerda */
+    }
+    
+    #files-table td[data-label]::before {
+        /* Transforma o label de "ao lado" para "em cima" */
+        position: static; /* Remove o posicionamento absoluto */
+        display: block;   /* Faz o label ocupar a sua própria linha */
+        width: 100%;      /* Ocupa a largura total */
+        font-weight: 500;
+        font-size: 0.8em; /* Deixa o label mais pequeno */
+        color: var(--text-muted); /* Cor de texto mutado */
+        text-transform: uppercase;
+        text-align: left;   /* Alinha o label à esquerda */
+        margin-bottom: 5px; /* Espaço entre o label e o valor */
+    }
+    
+    /* Ajuste para o 'Nome' (primeira célula) para não ter padding-top extra */
+    #files-table tr td:first-child[data-label]::before {
+        display: none; /* Esconde o label "Nome:" (já é óbvio) */
+    }
+    #files-table tr td:first-child {
+        padding-top: 15px; 
+        font-size: 1.1em; /* Destaca o nome do ficheiro */
+        font-weight: 500;
+    }
+    
+    /* Ajuste para as 'Ações' (última célula) */
+    #files-table td:last-child {
+        padding-bottom: 15px;
+        padding-top: 15px;
+    }
+    
+    /* Faz os botões de ação ocuparem 100% no card de arquivos */
+    #files-table .action-btn,
+    #files-table .action-link {
+        width: 100%;
+        display: block;
+        box-sizing: border-box; /* Inclui padding/border na largura */
+        text-align: center;
+        margin-right: 0;
+    }
+    /* --- FIM DAS CORREÇÕES --- */
+}

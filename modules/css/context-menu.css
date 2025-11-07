@@ -1,0 +1,58 @@
+.context-menu {
+    display: none; /* Oculto por defeito */
+    position: absolute;
+    z-index: 10000;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    min-width: 220px;
+    padding: 5px 0;
+    box-shadow: 0 5px 15px var(--shadow-color);
+    font-size: 0.9em;
+}
+
+.context-menu.show {
+    display: block; /* Mostrado via JS */
+}
+
+.context-menu a {
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    gap: 10px; /* Espaço entre ícone e texto */
+}
+
+.context-menu a:hover {
+    background: var(--accent-color);
+    color: #fff;
+}
+
+.context-menu a.cm-item-delete:hover {
+    background: #f44336; /* Vermelho para Excluir */
+    color: #fff;
+}
+
+.context-menu hr {
+    margin: 5px 0;
+    border: none;
+    height: 1px;
+    background-color: var(--border-color);
+}
+
+.context-menu .shortcut {
+    margin-left: auto; /* Alinha o atalho à direita */
+    color: var(--text-muted);
+    font-size: 0.9em;
+}
+
+.context-menu a:hover .shortcut {
+    color: #fff;
+}
+
+/* Classes para mostrar/ocultar itens */
+.context-menu a.cm-item-hidden {
+    display: none;
+}
