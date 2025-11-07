@@ -26,7 +26,7 @@
     </div>
 
     <div class="table-container-responsive" id="files-view-details">
-        <table id="files-table">
+        <table id="files-table" class="responsive-table responsive-table--files">
             <thead>
                 <tr>
                     <th>Nome</th>

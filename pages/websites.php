@@ -5,7 +5,7 @@
 
 <div class="card">
   <div class="table-container-responsive">
-    <table id="sites-table">
+    <table id="sites-table" class="responsive-table responsive-table--websites">
       <thead>
         <tr>
           <th>Domínio</th>

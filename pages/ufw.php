@@ -36,7 +36,7 @@
 <div class="card">
     <h3>Regras Salvas no Banco de Dados</h3>
     <div class="table-container-responsive">
-        <table id="ufw-rules-table">
+        <table id="ufw-rules-table" class="responsive-table responsive-table--ufw">
             <thead>
                 <tr>
                     <th>Ação</th>

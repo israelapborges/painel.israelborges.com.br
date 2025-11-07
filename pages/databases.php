@@ -8,7 +8,7 @@
 
 <div class="card">
   <div class="table-container-responsive">
-    <table id="databases-table">
+    <table id="databases-table" class="responsive-table responsive-table--databases">
     <thead>
         <tr>
           <th>Nome do Banco (DB)</th>

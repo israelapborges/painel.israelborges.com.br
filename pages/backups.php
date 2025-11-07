@@ -7,7 +7,7 @@
 
 <div class="card">
   <div class="table-container-responsive">
-    <table id="backups-table">
+    <table id="backups-table" class="responsive-table responsive-table--backups">
       <thead>
         <tr>
           <th>Nome do Site</th>

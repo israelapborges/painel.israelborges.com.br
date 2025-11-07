@@ -22,7 +22,7 @@
 
 <div class="card">
   <div class="table-container-responsive">
-    <table id="full-backups-table">
+    <table id="full-backups-table" class="responsive-table responsive-table--full-backups">
       <thead>
         <tr>
           <th>Nome do Site</th>

@@ -1,33 +1,46 @@
 :root {
-    --bg-color: #1a1b26;      
-    --card-bg: #24283b;      
-    --text-color: #c0caf5;   
-    --text-muted: #737c99;   
-    --accent-color: #7aa2f7; 
-    --shadow-color: rgba(0,0,0,0.2);
-    --border-color: #3b4261;
+    --bg-color: #1a1b26;
+    --bg-gradient: radial-gradient(circle at 20% 20%, rgba(122, 162, 247, 0.12), transparent 55%),
+                    radial-gradient(circle at 80% 10%, rgba(139, 233, 253, 0.08), transparent 45%),
+                    var(--bg-color);
+    --card-bg: #24283b;
+    --text-color: #c0caf5;
+    --text-muted: #737c99;
+    --accent-color: #7aa2f7;
+    --accent-color-strong: #4d7df7;
+    --shadow-color: rgba(0, 0, 0, 0.25);
+    --border-color: rgba(122, 162, 247, 0.12);
     --sidebar-bg: #24283b;
     --sidebar-width: 240px;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 18px;
+    --transition-base: 0.2s ease;
 }
 
 body.light-mode {
-    --bg-color: #f4f7f6;      
-    --card-bg: #ffffff;      
-    --text-color: #1f2335;   
-    --text-muted: #5f6368;   
-    --accent-color: #1a73e8; 
-    --shadow-color: rgba(0,0,0,0.05);
-    --border-color: #e0e0e0;
-    --sidebar-bg: #ffffff;
+    --bg-color: #f4f7f6;
+    --bg-gradient: radial-gradient(circle at 10% -10%, rgba(26, 115, 232, 0.18), transparent 40%),
+                    radial-gradient(circle at 90% 0%, rgba(0, 200, 255, 0.15), transparent 48%),
+                    var(--bg-color);
+    --card-bg: #ffffff;
+    --text-color: #1f2335;
+    --text-muted: #5f6368;
+    --accent-color: #1a73e8;
+    --accent-color-strong: #1557b0;
+    --shadow-color: rgba(15, 23, 42, 0.08);
+    --border-color: rgba(26, 115, 232, 0.12);
+    --sidebar-bg: rgba(255, 255, 255, 0.92);
 }
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: var(--bg-color);
+    background: var(--bg-gradient);
     color: var(--text-color);
     transition: background 0.3s, color 0.3s;
     margin: 0;
     padding: 0;
+    min-height: 100vh;
 }
 
 .layout-container {
@@ -38,8 +51,10 @@ body {
 .sidebar {
     width: var(--sidebar-width);
     background: var(--sidebar-bg);
-    padding: 20px 0;
-    box-shadow: 2px 0 10px var(--shadow-color);
+    padding: 24px 0;
+    box-shadow: 2px 0 20px var(--shadow-color);
+    border-right: 1px solid var(--border-color);
+    backdrop-filter: blur(18px);
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -109,14 +124,14 @@ body {
 .main-content-wrapper {
     margin-left: var(--sidebar-width);
     width: calc(100% - var(--sidebar-width));
-    padding: 20px;
+    padding: 28px;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 10px 20px 10px;
+    padding: 0 10px 28px 10px;
 }
 
 .dashboard {
@@ -126,19 +141,31 @@ body {
 }
 
 .card {
-    background: var(--card-bg);
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 12px var(--shadow-color);
-    transition: background 0.3s;
-    overflow: hidden; /* Para conter as tabelas */
+    background: rgba(36, 40, 59, 0.95);
+    border-radius: var(--radius-lg);
+    padding: 26px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 18px 45px var(--shadow-color);
+    transition: transform var(--transition-base), box-shadow var(--transition-base), background 0.3s;
+    overflow: hidden;
+}
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+body.light-mode .card {
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+}
+body.light-mode .card:hover {
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
 }
 
 .card h2, .card h3 {
     margin-top: 0;
     color: var(--text-color);
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 12px;
 }
 
 .stat-value {
@@ -264,17 +291,24 @@ p strong { color: var(--text-color); font-weight: 600; }
 
 
 .btn-primary {
-    background-color: var(--accent-color);
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-color-strong));
     color: #fff;
     border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
+    padding: 12px 18px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    font-weight: 500;
-    transition: opacity 0.2s;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 25px rgba(122, 162, 247, 0.25);
+    transition: transform var(--transition-base), box-shadow var(--transition-base), filter var(--transition-base);
 }
 .btn-primary:hover {
-    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 16px 35px rgba(122, 162, 247, 0.35);
+}
+.btn-primary:active {
+    transform: translateY(0);
+    filter: brightness(0.95);
 }
 
 /* --- ESTILOS DE MÓDULOS (Globais) --- */
@@ -282,114 +316,259 @@ p strong { color: var(--text-color); font-weight: 600; }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap; /* Permite que os botões quebrem a linha */
-    gap: 10px; /* Espaço entre os botões */
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 .header-controls h2 {
     margin: 0;
     color: var(--text-color);
+    font-size: 1.35rem;
+    letter-spacing: 0.015em;
 }
 
 /* --- Estilos de Tabela (Globais) --- */
 .table-container-responsive {
     width: 100%;
-    overflow-x: auto; /* Adiciona scroll horizontal */
+    overflow-x: auto;
+    border-radius: var(--radius-md);
+    background: rgba(36, 40, 59, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+body.light-mode .table-container-responsive {
+    background: rgba(255, 255, 255, 0.7);
+    border-color: rgba(26, 115, 232, 0.12);
 }
 
-#sites-table,
-#databases-table,
-#backups-table,
-#full-backups-table,
-#files-table {
+.responsive-table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 100%;
+    background: transparent;
 }
 
-#sites-table th, #sites-table td,
-#databases-table th, #databases-table td,
-#backups-table th, #backups-table td,
-#full-backups-table th, #full-backups-table td,
-#files-table th, #files-table td {
-    padding: 12px 15px;
+.responsive-table thead th {
+    padding: 14px 20px;
     text-align: left;
-    border-bottom: 1px solid var(--border-color);
-    white-space: nowrap; /* Impede que o texto quebre a linha */
-}
-
-#sites-table th,
-#databases-table th,
-#backups-table th,
-#full-backups-table th,
-#files-table th {
-    color: var(--text-muted);
-    font-size: 0.9em;
     text-transform: uppercase;
-}
-
-#sites-table .loading,
-#databases-table .loading,
-#backups-table .loading,
-#full-backups-table .loading,
-#files-table .loading {
-    text-align: center;
-    padding: 20px;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
     color: var(--text-muted);
-    white-space: normal;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: transparent;
 }
-/* --- Fim dos Estilos de Tabela --- */
+body.light-mode .responsive-table thead th {
+    border-bottom-color: rgba(26, 115, 232, 0.16);
+}
 
+.responsive-table tbody tr {
+    transition: background 0.25s ease, transform 0.2s ease;
+}
+.responsive-table tbody tr:hover {
+    background: rgba(122, 162, 247, 0.07);
+}
+body.light-mode .responsive-table tbody tr:hover {
+    background: rgba(26, 115, 232, 0.08);
+}
+
+.responsive-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    color: var(--text-color);
+    font-size: 0.95rem;
+    vertical-align: middle;
+}
+body.light-mode .responsive-table td {
+    border-bottom-color: rgba(26, 115, 232, 0.12);
+}
+
+.responsive-table td[data-label="Ações"] {
+    text-align: right;
+}
+.responsive-table td[data-label="Ações"] .action-btn,
+.responsive-table td[data-label="Ações"] .action-link {
+    margin: 4px 6px;
+}
+
+.responsive-table .table-placeholder-row td {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-muted);
+}
 
 .status-active {
-    color: #4CAF50; /* Verde */
-    font-weight: bold;
+    color: #4CAF50;
+    font-weight: 600;
 }
 .status-inactive {
-    color: #f44336; /* Vermelho */
-    font-weight: bold;
+    color: #f44336;
+    font-weight: 600;
 }
-.action-btn {
-    background: var(--bg-color);
-    border: 1px solid var(--border-color);
-    color: var(--text-muted);
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 5px;
-    transition: background 0.2s, color 0.2s;
-    margin-top: 5px; /* Adiciona espaço no mobile */
-    margin-bottom: 5px; /* Adiciona espaço no mobile */
+
+.responsive-table--files td[data-label="Nome"] {
+    font-weight: 600;
 }
-.action-btn:hover {
-    background: var(--border-color);
-    color: var(--text-color);
+
+.responsive-table--cron td[data-label="Agenda"],
+.responsive-table--cron td[data-label="Comando"] {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 0.9rem;
 }
+.responsive-table--cron td[data-label="Agenda"] {
+    color: var(--accent-color);
+    text-align: center;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+}
+
+.responsive-table--ufw td[data-label="Gerenciar"],
+.responsive-table--backups td[data-label="Ações"],
+.responsive-table--full-backups td[data-label="Ações"],
+.responsive-table--databases td[data-label="Ações"],
+.responsive-table--websites td[data-label="Ações"] {
+    white-space: normal;
+}
+
+@media (max-width: 768px) {
+    .responsive-table,
+    .responsive-table tbody,
+    .responsive-table tr,
+    .responsive-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .table-container-responsive {
+        overflow: visible;
+        background: transparent;
+        border: none;
+        padding: 0;
+    }
+
+    .responsive-table tbody {
+        display: grid;
+        gap: 18px;
+    }
+
+    .responsive-table tbody tr {
+        background: rgba(36, 40, 59, 0.95);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        box-shadow: 0 18px 45px var(--shadow-color);
+        padding: 12px 0;
+    }
+    body.light-mode .responsive-table tbody tr {
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+    }
+
+    .responsive-table thead {
+        display: none;
+    }
+
+    .responsive-table td {
+        border: none;
+        padding: 14px 20px;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .responsive-table td::before {
+        content: attr(data-label);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+    }
+
+    .responsive-table td[data-label="Ações"] {
+        align-items: stretch;
+    }
+
+    .responsive-table td[data-label="Ações"] .action-btn,
+    .responsive-table td[data-label="Ações"] .action-link {
+        width: 100%;
+        margin: 4px 0;
+    }
+
+    .responsive-table .table-placeholder-row {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+    }
+
+    .responsive-table .table-placeholder-row td {
+        text-align: center;
+        padding: 20px;
+    }
+
+    .responsive-table .table-placeholder-row td::before {
+        content: none;
+    }
+
+    .responsive-table--files td[data-label="Nome"]::before {
+        display: none;
+    }
+    .responsive-table--files td[data-label="Nome"] {
+        font-size: 1.05rem;
+        padding-top: 18px;
+    }
+
+    .responsive-table--cron td[data-label="Agenda"] {
+        text-align: left;
+        white-space: normal;
+    }
+}
+.action-btn,
 .action-link {
-    display: inline-block;
-    background: var(--bg-color);
-    border: 1px solid var(--border-color);
-    color: var(--text-muted);
-    padding: 5px 10px;
-    border-radius: 4px;
-    margin-right: 5px;
-    text-decoration: none;
-    transition: background 0.2s, color 0.2s;
-    font-size: 0.9em;
-}
-.action-link:hover {
-    background: var(--border-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(36, 40, 59, 0.65);
     color: var(--text-color);
+    font-weight: 500;
+    font-size: 0.95em;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 4px 6px 4px 0;
+    transition: transform var(--transition-base), box-shadow var(--transition-base), background var(--transition-base);
+}
+.action-btn:hover,
+.action-link:hover {
+    background: rgba(74, 85, 139, 0.75);
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.25);
+    transform: translateY(-1px);
 }
 .action-link.disabled {
     color: var(--border-color);
-    background: var(--bg-color);
+    background: rgba(36, 40, 59, 0.4);
     pointer-events: none;
-    opacity: 0.5;
+    opacity: 0.55;
+    box-shadow: none;
+}
+body.light-mode .action-btn,
+body.light-mode .action-link {
+    background: rgba(255, 255, 255, 0.85);
+    border-color: rgba(26, 115, 232, 0.16);
+    color: var(--text-color);
+}
+body.light-mode .action-link.disabled {
+    color: rgba(26, 115, 232, 0.45);
+    background: rgba(231, 239, 255, 0.65);
 }
 .actions-cell {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .action-placeholder {
@@ -676,19 +855,11 @@ p strong { color: var(--text-color); font-weight: 600; }
         text-align: center; /* Centraliza o título */
         margin-bottom: 15px;
     }
-.header-controls {
-        flex-direction: column; /* Empilha os itens */
-        align-items: stretch; /* Estica os itens */
-    }
-    .header-controls h2 {
-        text-align: center; /* Centraliza o título */
-        margin-bottom: 15px;
-    }
-    
+
     /* Regra para DIVs dentro do cabeçalho (ex: Full Backups) */
     .header-controls div {
         display: flex;
-        flex-direction: column; 
+        flex-direction: column;
         gap: 10px;
         width: 100%;
         margin-bottom: 10px;
@@ -702,142 +873,4 @@ p strong { color: var(--text-color); font-weight: 600; }
         box-sizing: border-box; /* Garante que o padding não quebre o 100% */
     }
 
-    /* Remove o scroll horizontal (quebra a experiência) */
-    .table-container-responsive {
-        overflow-x: hidden;
-    }
-    
-    /* --- CORREÇÃO: Tabelas Responsivas (Modo Card) --- */
-    
-    /* Esconde o cabeçalho da tabela */
-    #sites-table thead,
-    #databases-table thead,
-    #backups-table thead,
-    #full-backups-table thead,
-    #files-table thead,
-    #cron-table thead {
-        display: none;
-    }
-    
-    /* Remove a borda do 'tbody' (agora desnecessária) */
-    #sites-table tbody,
-    #databases-table tbody,
-    #backups-table tbody,
-    #full-backups-table tbody,
-    #files-table tbody {
-        border-top: none;
-    }
-
-    /* Transforma a linha (row) num card */
-    #sites-table tr,
-    #databases-table tr,
-    #backups-table tr,
-    #full-backups-table tr,
-    #files-table tr {
-        display: block;
-        border: 1px solid var(--border-color);
-        background: var(--card-bg);
-        border-radius: 8px;
-        margin-bottom: 15px;
-        box-shadow: 0 2px 4px var(--shadow-color);
-    }
-    
-    #sites-table .table-placeholder-row,
-    #databases-table .table-placeholder-row,
-    #backups-table .table-placeholder-row,
-    #full-backups-table .table-placeholder-row,
-    #files-table .table-placeholder-row,
-    #cron-table .table-placeholder-row,
-    #ufw-rules-table .table-placeholder-row {
-         border: none;
-         background: none;
-         box-shadow: none;
-    }
-    
-    /* Transforma a célula (cell) num item de lista */
-    #sites-table td,
-    #databases-table td,
-    #backups-table td,
-    #full-backups-table td,
-    #files-table td {
-        display: block;
-        text-align: right; /* Alinha o valor à direita */
-        padding-left: 50%; /* Dá espaço para o label */
-        position: relative;
-        white-space: normal; /* Permite quebra de linha */
-        border: none;
-        border-bottom: 1px solid var(--bg-color); /* Separador sutil */
-    }
-    
-    #sites-table td:last-child,
-    #files-table td:last-child,
-    #databases-table td:last-child,
-    #backups-table td:last-child,
-    #full-backups-table td:last-child {
-        border-bottom: none; /* Remove a borda da última célula */
-    }
-
-    /* Adiciona o Label (ex: "Nome do Site:") antes do valor */
-    #sites-table td[data-label]::before,
-    #databases-table td[data-label]::before,
-    #backups-table td[data-label]::before,
-    #full-backups-table td[data-label]::before,
-    #files-table td[data-label]::before {
-        content: attr(data-label); /* Pega o texto do data-label */
-        position: absolute;
-        left: 15px;
-        width: calc(50% - 30px); /* Metade do espaço menos padding */
-        text-align: left;
-        font-weight: 500;
-        color: var(--text-color); 
-        white-space: nowrap;
-    }
-
-#files-table td {
-        padding-left: 15px; /* Remove o padding de 50% */
-        padding-right: 15px;
-        padding-top: 10px;  /* Adiciona padding normal */
-        padding-bottom: 10px;
-        text-align: left;   /* Alinha o conteúdo à esquerda */
-    }
-    
-    #files-table td[data-label]::before {
-        /* Transforma o label de "ao lado" para "em cima" */
-        position: static; /* Remove o posicionamento absoluto */
-        display: block;   /* Faz o label ocupar a sua própria linha */
-        width: 100%;      /* Ocupa a largura total */
-        font-weight: 500;
-        font-size: 0.8em; /* Deixa o label mais pequeno */
-        color: var(--text-muted); /* Cor de texto mutado */
-        text-transform: uppercase;
-        text-align: left;   /* Alinha o label à esquerda */
-        margin-bottom: 5px; /* Espaço entre o label e o valor */
-    }
-    
-    /* Ajuste para o 'Nome' (primeira célula) para não ter padding-top extra */
-    #files-table tr td:first-child[data-label]::before {
-        display: none; /* Esconde o label "Nome:" (já é óbvio) */
-    }
-    #files-table tr td:first-child {
-        padding-top: 15px; 
-        font-size: 1.1em; /* Destaca o nome do ficheiro */
-        font-weight: 500;
-    }
-    
-    /* Ajuste para as 'Ações' (última célula) */
-    #files-table td:last-child {
-        padding-bottom: 15px;
-        padding-top: 15px;
-    }
-    
-    /* Faz os botões de ação ocuparem 100% no card de arquivos */
-    #files-table .action-btn,
-    #files-table .action-link {
-        width: 100%;
-        display: block;
-        box-sizing: border-box; /* Inclui padding/border na largura */
-        text-align: center;
-        margin-right: 0;
-    }
-    /* --- FIM DAS CORREÇÕES --- */
 }
