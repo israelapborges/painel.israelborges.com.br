@@ -2,33 +2,23 @@
 // (O index.php já trata a sessão)
 ?>
 <div class="header-controls">
-    <h2><span id="ufw-status-indicator" style="font-size: 0.8em;">(…)</span> Firewall UFW</h2>
-    <div style="display: flex; gap: 10px;">
-        
-        <button class="btn-primary" id="btn-ufw-sync" style="background-color: #ff9800; color: #fff;">
+    <h2><span id="ufw-status-indicator" class="status-chip">(…)</span> Firewall UFW</h2>
+    <div class="header-actions">
+        <button class="btn-warning" id="btn-ufw-sync">
             Sincronizar com Servidor 🔄
         </button>
-        
         <button class="btn-primary" id="btn-ufw-add-rule">Adicionar Regra</button>
-        
-        <button id="btn-ufw-refresh" title="Atualizar Lista" 
-                style="font-size: 1.5rem; 
-                       background: var(--card-bg); 
-                       border: 1px solid var(--border-color); 
-                       color: var(--text-color); 
-                       padding: 8px 12px; 
-                       border-radius: 8px; 
-                       cursor: pointer;">🔄</button>
+        <button id="btn-ufw-refresh" class="btn-icon" title="Atualizar Lista">🔄</button>
     </div>
 </div>
 
-<div class="dashboard" style="margin-bottom: 20px;">
+<div class="dashboard">
     <div class="card" id="ufw-status-card">
         <h3>Status do Servidor UFW</h3>
         <p id="ufw-status-text" class="loading">Carregando...</p>
-        <div class="header-controls" style="margin-top: 15px;">
-             <button class="action-btn" id="btn-ufw-enable" style="background: #4CAF50; color: #fff;">Ativar</button>
-             <button class="action-btn" id="btn-ufw-disable" style="background: #f44336; color: #fff;">Desativar</button>
+        <div class="action-group action-group--spaced">
+             <button class="btn-success" id="btn-ufw-enable">Ativar</button>
+             <button class="btn-danger" id="btn-ufw-disable">Desativar</button>
         </div>
     </div>
 </div>
@@ -36,7 +26,7 @@
 <div class="card">
     <h3>Regras Salvas no Banco de Dados</h3>
     <div class="table-container-responsive">
-        <table id="ufw-rules-table">
+        <table id="ufw-rules-table" class="responsive-table responsive-table--ufw">
             <thead>
                 <tr>
                     <th>Ação</th>
