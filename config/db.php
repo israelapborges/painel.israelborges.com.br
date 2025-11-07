@@ -1,8 +1,8 @@
 <?php
 // ATENÇÃO: Use uma NOVA SENHA. Esta foi exposta.
 $db_host = '127.0.0.1'; // ou 'localhost'
-$db_name = 'painel';
-$db_user = 'painel';
+$db_name = 'mypainel';
+$db_user = 'mypainel';
 $db_pass = 'senha'; // <- MUDE ISSO IMEDIATAMENTE
 $charset = 'utf8mb4';
 
