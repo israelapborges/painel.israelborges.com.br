@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 06/11/2025 às 19:52
--- Versão do servidor: 8.0.36-28
--- Versão do PHP: 8.1.32
+-- Tempo de geração: 07/11/2025 às 09:22
+-- Versão do servidor: 8.0.43-0ubuntu0.24.04.1
+-- Versão do PHP: 8.1.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Banco de dados: `painel`
+-- Banco de dados: `mypainel`
 --
 
 -- --------------------------------------------------------
@@ -37,12 +37,6 @@ CREATE TABLE `backup_sites` (
   `last_backup_size` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Despejando dados para a tabela `backup_sites`
---
-
-INSERT INTO `backup_sites` (`id`, `conf_name`, `root_path`, `linked_db_id`, `last_backup_file`, `last_backup_date`, `last_backup_size`) VALUES
-
 -- --------------------------------------------------------
 
 --
@@ -56,13 +50,6 @@ CREATE TABLE `crontab` (
   `title` varchar(255) NOT NULL DEFAULT '',
   `is_active` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Despejando dados para a tabela `crontab`
---
-
-INSERT INTO `crontab` (`id`, `schedule`, `command`, `title`, `is_active`) VALUES
-(5, '* * * * *', '/usr/bin/php /home/seu-usuario-painel/htdocs/painel.seusite.com.br/worker.php >> /var/log/mypanel_worker.log 2>&1', 'MyPanel', 1);
 
 -- --------------------------------------------------------
 
@@ -80,12 +67,6 @@ CREATE TABLE `managed_databases` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Despejando dados para a tabela `managed_databases`
---
-
-INSERT INTO `managed_databases` (`id`, `db_name`, `db_user`, `last_backup_file`, `last_backup_date`, `last_backup_size`, `created_at`) VALUES
-
 -- --------------------------------------------------------
 
 --
@@ -93,8 +74,8 @@ INSERT INTO `managed_databases` (`id`, `db_name`, `db_user`, `last_backup_file`,
 --
 
 CREATE TABLE `panel_settings` (
-  `setting_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `setting_value` text COLLATE utf8mb4_general_ci
+  `setting_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `setting_value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -112,18 +93,12 @@ INSERT INTO `panel_settings` (`setting_name`, `setting_value`) VALUES
 
 CREATE TABLE `pending_tasks` (
   `id` int NOT NULL,
-  `task_type` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `task_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `payload` json NOT NULL,
-  `status` enum('pending','processing','complete','failed') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'pending',
-  `log` text COLLATE utf8mb4_general_ci,
+  `status` enum('pending','processing','complete','failed') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'pending',
+  `log` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Despejando dados para a tabela `pending_tasks`
---
-
-INSERT INTO `pending_tasks` (`id`, `task_type`, `payload`, `status`, `log`, `created_at`) VALUES
 
 -- --------------------------------------------------------
 
@@ -139,12 +114,6 @@ CREATE TABLE `ufw` (
   `source` varchar(50) NOT NULL DEFAULT 'any',
   `comment` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Despejando dados para a tabela `ufw`
---
-
-INSERT INTO `ufw` (`id`, `action`, `port`, `protocol`, `source`, `comment`) VALUES
 
 -- --------------------------------------------------------
 
@@ -163,7 +132,7 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `login`, `senha_hash`) VALUES
-(1, 'admin', '$sdfsdfd$10$sdfdsfdsfdsfdsfsdfsdfsd.dsfsdfdsf');
+(1, 'admin', '$2y$10$AVfh9KGBFOJSOTUVYzEdyu0gxuUJVW7xzHLFnKmwFgeY.yw26z4qy');
 
 --
 -- Índices para tabelas despejadas
@@ -225,7 +194,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de tabela `backup_sites`
 --
 ALTER TABLE `backup_sites`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112217;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `crontab`
@@ -243,13 +212,13 @@ ALTER TABLE `managed_databases`
 -- AUTO_INCREMENT de tabela `pending_tasks`
 --
 ALTER TABLE `pending_tasks`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=148;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `ufw`
 --
 ALTER TABLE `ufw`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `usuarios`
