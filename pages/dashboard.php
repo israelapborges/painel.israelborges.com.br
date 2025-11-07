@@ -3,7 +3,37 @@
 ?>
 <div class="dashboard">
 
-    <div class="card">
+    <div class="card system-card">
+        <h3>Identidade do Servidor</h3>
+        <dl class="stat-list">
+            <div class="stat-list-row">
+                <dt>Hostname</dt>
+                <dd id="system-hostname"><span class="loading">...</span></dd>
+            </div>
+            <div class="stat-list-row">
+                <dt>Uptime</dt>
+                <dd id="system-uptime"><span class="loading">...</span></dd>
+            </div>
+            <div class="stat-list-row">
+                <dt>Kernel</dt>
+                <dd id="system-kernel"><span class="loading">...</span></dd>
+            </div>
+            <div class="stat-list-row">
+                <dt>Arquitetura</dt>
+                <dd id="system-architecture"><span class="loading">...</span></dd>
+            </div>
+            <div class="stat-list-row">
+                <dt>Último boot</dt>
+                <dd id="system-last-boot"><span class="loading">...</span></dd>
+            </div>
+            <div class="stat-list-row">
+                <dt>Última leitura</dt>
+                <dd id="system-updated"><span class="loading">...</span></dd>
+            </div>
+        </dl>
+    </div>
+
+    <div class="card metric-card">
         <h3>CPU &amp; Load</h3>
         <div class="stat-value" id="load-percent">
             <span class="loading">...</span>
@@ -13,23 +43,78 @@
         </div>
     </div>
 
-    <div class="card">
+    <div class="card metric-card">
         <h3>Memória RAM</h3>
         <div class="stat-value" id="ram-percent">
             <span class="loading">...</span>
         </div>
         <div class="stat-label">
-            <span id="ram-used">...</span> MB / <span id="ram-total">...</span> MB
+            <span id="ram-used">...</span> MB usados de <span id="ram-total">...</span> MB
+        </div>
+        <div class="stat-meta-grid">
+            <span>Disponível: <strong id="ram-free">...</strong> MB</span>
+            <span>Swap: <strong id="swap-used">...</strong> / <strong id="swap-total">...</strong> MB (<span id="swap-percent">...</span>)</span>
         </div>
     </div>
 
-    <div class="card">
+    <div class="card metric-card">
         <h3>Disco /</h3>
         <div class="stat-value" id="disk-percent">
             <span class="loading">...</span>
         </div>
         <div class="stat-label">
-            <span id="disk-used">...</span> GB / <span id="disk-total">...</span> GB
+            <span id="disk-used">...</span> GB usados de <span id="disk-total">...</span> GB
+        </div>
+    </div>
+
+    <div class="card temperature-card">
+        <h3>Temperaturas &amp; Sensores</h3>
+        <ul id="temperature-list" class="temperature-list">
+            <li class="temp-item muted">Coletando dados térmicos...</li>
+        </ul>
+    </div>
+
+    <div class="card network-card">
+        <h3>Rede</h3>
+        <table class="network-table">
+            <thead>
+                <tr>
+                    <th>Interface</th>
+                    <th>Recebido</th>
+                    <th>Enviado</th>
+                </tr>
+            </thead>
+            <tbody id="network-table-body">
+                <tr><td colspan="3" class="muted">Aguardando leitura...</td></tr>
+            </tbody>
+        </table>
+        <div class="stat-meta-grid">
+            <span>Total RX: <strong id="network-total-rx">...</strong></span>
+            <span>Total TX: <strong id="network-total-tx">...</strong></span>
+        </div>
+    </div>
+
+    <div class="card process-card">
+        <h3>Processos em Destaque</h3>
+        <table class="process-table">
+            <thead>
+                <tr>
+                    <th>PID</th>
+                    <th>Comando</th>
+                    <th>CPU</th>
+                    <th>Memória</th>
+                </tr>
+            </thead>
+            <tbody id="process-table-body">
+                <tr><td colspan="4" class="muted">Capturando processos...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card filesystem-card">
+        <h3>Volumes Montados</h3>
+        <div id="filesystem-list" class="filesystem-list">
+            <div class="muted">Mapeando volumes...</div>
         </div>
     </div>
 

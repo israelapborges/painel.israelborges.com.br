@@ -136,6 +136,192 @@ body {
     overflow: hidden; /* Para conter as tabelas */
 }
 
+.muted {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.system-card {
+    grid-column: span 2;
+}
+
+.stat-list {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+}
+
+.stat-list-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 4px 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.stat-list-row:last-child {
+    border-bottom: none;
+}
+
+.stat-list-row dt {
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.stat-list-row dd {
+    margin: 0;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.stat-meta-grid {
+    margin-top: 12px;
+    display: grid;
+    gap: 6px;
+    font-size: 0.9em;
+    color: var(--text-muted);
+}
+
+.temperature-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+}
+
+.temp-item {
+    background: rgba(122, 162, 247, 0.05);
+    border: 1px solid rgba(122, 162, 247, 0.2);
+    border-left: 4px solid var(--accent-color);
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.temp-item.warning {
+    border-left-color: #f7b267;
+    background: rgba(247, 178, 103, 0.08);
+}
+
+.temp-item.danger {
+    border-left-color: var(--warning-color);
+    background: rgba(247, 118, 142, 0.1);
+}
+
+.temp-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+}
+
+.temp-meta {
+    font-size: 0.85em;
+    color: var(--text-muted);
+}
+
+.temp-chip {
+    font-size: 0.75em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.network-table,
+.process-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+.network-table th,
+.network-table td,
+.process-table th,
+.process-table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.network-table th,
+.process-table th {
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.filesystem-list {
+    display: grid;
+    gap: 12px;
+}
+
+.filesystem-item {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    padding: 12px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filesystem-item.root {
+    border-color: rgba(247, 118, 142, 0.4);
+}
+
+.filesystem-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+}
+
+.filesystem-meta {
+    font-size: 0.85em;
+    color: var(--text-muted);
+}
+
+.progress-bar {
+    height: 8px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progress-bar-inner {
+    height: 100%;
+    background: var(--accent-color);
+    transition: width 0.4s ease;
+}
+
+.filesystem-item.root .progress-bar-inner {
+    background: var(--warning-color);
+}
+
+body.light-mode .stat-list-row {
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .temp-item {
+    background: rgba(26, 115, 232, 0.1);
+    border-color: rgba(26, 115, 232, 0.25);
+}
+
+body.light-mode .temp-item.warning {
+    background: rgba(247, 178, 103, 0.18);
+}
+
+body.light-mode .temp-item.danger {
+    background: rgba(217, 48, 37, 0.16);
+}
+
+body.light-mode .filesystem-item {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
 .overview-card {
     grid-column: 1 / -1;
     display: flex;
@@ -156,6 +342,11 @@ body {
     background: rgba(247, 118, 142, 0.12);
     color: var(--warning-color);
     border-color: rgba(247, 118, 142, 0.35);
+}
+
+.overview-alert ul {
+    margin: 0;
+    padding-left: 18px;
 }
 
 .module-summary-grid {
