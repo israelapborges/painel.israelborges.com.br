@@ -4,11 +4,11 @@
 <div class="card">
     <div class="header-controls">
         <h2>Tarefas Agendadas (Cron)</h2>
-        <div style="display: flex; gap: 10px;">
-            <button id="btnSyncCron" class="btn-primary" style="background-color: var(--accent-color);">
+        <div class="header-actions">
+            <button id="btnSyncCron" class="btn-info">
                 Sincronizar com Servidor 🔄
             </button>
-            <button id="btnAddCronJob" class="btn-primary" style="background-color: #4CAF50;">
+            <button id="btnAddCronJob" class="btn-success">
                 Adicionar Tarefa ➕
             </button>
         </div>
@@ -32,5 +32,6 @@
         </table>
     </div>
 </div>
+
 
 

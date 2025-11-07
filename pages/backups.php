@@ -1,7 +1,7 @@
 <div class="header-controls">
   <h2>Gerenciamento de Backups de Sites</h2>
-  <div>
-    <button id="btnRestoreSiteUpload" class="btn-primary" style="background-color: #555e7d; margin-right: 10px;">Restaurar do Computador</button>
+  <div class="header-actions">
+    <button id="btnRestoreSiteUpload" class="btn-secondary">Restaurar do Computador</button>
   </div>
 </div>
 
